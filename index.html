@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>감정의 형태</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #3e4451;
+      font-family: 'Arial', sans-serif;
+      color: #fff;
+    }
+    header {
+      background: #fff;
+      color: #333;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+    }
+    header .logo {
+      flex: 1;
+      text-align: center;
+    }
+    header .logo img {
+      height: 60px;
+    }
+    header nav {
+      display: flex;
+      gap: 10px;
+    }
+    header nav a {
+      text-decoration: none;
+      color: #333;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      gap: 20px;
+      position: relative;
+    }
+    .card {
+      width: 200px;
+      height: 300px;
+      background-color: #2e3138;
+      border-radius: 15px;
+    }
+    .center-card {
+      width: 250px;
+      height: 300px;
+      background-color: #1f2021;
+      border-radius: 15px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .center-card video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 15px;
+      transition: transform 0.5s ease;
+    }
+    .arrow {
+      font-size: 2rem;
+      color: #ccc;
+      cursor: pointer;
+      user-select: none;
+    }
+    .arrow.left {
+      position: absolute;
+      left: -40px;
+      top: 45%;
+    }
+    .arrow.right {
+      position: absolute;
+      right: -40px;
+      top: 45%;
+    }
+    .info {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .slider {
+      -webkit-appearance: none;
+      width: 80%;
+      height: 5px;
+      background: #888;
+      border-radius: 5px;
+      outline: none;
+      overflow: hidden;
+      position: relative;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 10px;
+      height: 10px;
+      background: white;
+      border-radius: 50%;
+      cursor: pointer;
+      position
