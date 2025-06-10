@@ -1,111 +1,238 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>감정의 형태</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      background-color: #3e4451;
-      font-family: 'Arial', sans-serif;
+      background: #2e3138;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
     }
     header {
-      background: #fff;
-      color: #333;
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: bold;
+      width:100%; height:80px;
+      background:#fff;
+      border-bottom-left-radius:20px;
+      border-bottom-right-radius:20px;
+      position:relative;
+      display:flex; justify-content:center; align-items:center;
     }
-    header .logo {
-      flex: 1;
-      text-align: center;
+    .logo img { height:60px; }
+    .nav {
+      position:absolute; right:40px;
+      display:flex; gap:30px;
     }
-    header .logo img {
-      height: 60px;
+    .nav a {
+      color:#333; text-decoration:none;
+      font-size:1rem; font-weight:500; position:relative;
     }
-    header nav {
-      display: flex;
-      gap: 10px;
+    .nav a::after {
+      content:''; position:absolute;
+      bottom:-5px; left:0;
+      width:0; height:2px; background:#333;
+      transition:width .3s;
     }
-    header nav a {
-      text-decoration: none;
-      color: #333;
+    .nav a:hover::after { width:100%; }
+
+    /* 플레이어: overflow visible */
+    .player {
+      position:relative;
+      width:400px; height:400px;
+      margin:60px 0 0;
+      overflow: visible;
+      border-radius:20px;
+      box-shadow:
+        inset 0 0 50px rgba(0,0,0,0.8),
+        0 0 30px rgba(255,255,255,0.1);
     }
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 40px 20px;
-      gap: 20px;
-      position: relative;
+    .video-container {
+      display:flex;
+      height:100%;
+      transition:transform .6s ease;
     }
-    .card {
-      width: 200px;
-      height: 300px;
-      background-color: #2e3138;
-      border-radius: 15px;
+    .video-item {
+      width:400px; height:100%;
+      flex-shrink:0;
+      margin: 0 20px;
     }
-    .center-card {
-      width: 250px;
-      height: 300px;
-      background-color: #1f2021;
-      border-radius: 15px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .video-item video {
+      width:100%; height:100%; object-fit:cover;
+      border-radius:20px;
     }
-    .center-card video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 15px;
-      transition: transform 0.5s ease;
+
+    .controls {
+      display:flex; align-items:center; gap:20px;
+      margin-top:30px;
     }
-    .arrow {
-      font-size: 2rem;
-      color: #ccc;
-      cursor: pointer;
-      user-select: none;
+    .controls button {
+      background:none; border:2px solid #fff;
+      border-radius:50%; width:50px; height:50px;
+      color:#fff; font-size:1.5rem; cursor:pointer;
+      transition:background .3s, color .3s;
     }
-    .arrow.left {
-      position: absolute;
-      left: -40px;
-      top: 45%;
+    .controls button:hover {
+      background:#fff; color:#000;
     }
-    .arrow.right {
-      position: absolute;
-      right: -40px;
-      top: 45%;
+    .bar-container {
+      display:flex; align-items:center; gap:10px;
+      margin-top:15px;
     }
-    .info {
-      text-align: center;
-      margin-top: 20px;
+    .bar {
+      width:300px; height:6px;
+      background:rgba(255,255,255,0.2);
+      border-radius:3px; overflow:hidden;
     }
-    .slider {
-      -webkit-appearance: none;
-      width: 80%;
-      height: 5px;
-      background: #888;
-      border-radius: 5px;
-      outline: none;
-      overflow: hidden;
-      position: relative;
+    .progress {
+      height:100%; background:#fff; width:0%;
+      transition:width .1s linear;
     }
-    .slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 10px;
-      height: 10px;
-      background: white;
-      border-radius: 50%;
-      cursor: pointer;
-      position
+    .time-display {
+      font-size:0.9rem; color:#fff;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="logo.png" alt="감정의 형태 로고">
+    </div>
+    <nav class="nav">
+      <a href="#">Home</a>
+      <a href="#">Join</a>
+      <a href="#">Login</a>
+    </nav>
+  </header>
+
+  <div class="player">
+    <div class="video-container" id="videoContainer">
+      <!-- 7곡 분량 -->
+      <div class="video-item"><video id="v0"></video></div>
+      <div class="video-item"><video id="v1"></video></div>
+      <div class="video-item"><video id="v2"></video></div>
+      <div class="video-item"><video id="v3"></video></div>
+      <div class="video-item"><video id="v4"></video></div>
+      <div class="video-item"><video id="v5"></video></div>
+      <div class="video-item"><video id="v6"></video></div>
+    </div>
+  </div>
+
+  <audio id="audio"></audio>
+
+  <div class="controls">
+    <button onclick="prev()">⟨</button>
+    <button id="playBtn" onclick="togglePlay()">▶︎</button>
+    <button onclick="next()">⟩</button>
+  </div>
+
+  <div class="bar-container">
+    <div class="bar"><div class="progress" id="progress"></div></div>
+    <div class="time-display" id="timeDisplay">0:00 / 1:00</div>
+  </div>
+
+  <script>
+    const videoContainer = document.getElementById('videoContainer');
+    const playBtn = document.getElementById('playBtn');
+    const audio = document.getElementById('audio');
+    const progress = document.getElementById('progress');
+    const timeDisplay = document.getElementById('timeDisplay');
+    const videos = [
+      document.getElementById('v0'),
+      document.getElementById('v1'),
+      document.getElementById('v2'),
+      document.getElementById('v3'),
+      document.getElementById('v4'),
+      document.getElementById('v5'),
+      document.getElementById('v6')
+    ];
+
+    // 실제 파일명 배열로 교체!
+    const videoSrc = [
+      '01_render.mp4',
+      '02_render.mp4',
+      '03_render.mp4',
+      '04_render.mp4',
+      '05_render.mp4',
+      '06_render.mp4',
+      '07_render.mp4'
+    ];
+    const audioSrc = [
+      '01.mp3',
+      '02.mp3',
+      '03.mp3',
+      '04.mp3',
+      '05.mp3',
+      '06.mp3',
+      '07.mp3'
+    ];
+
+    const itemW = 400;
+    const margin = 20;
+    const fullW = itemW + margin*2;
+    const offset = margin; // centering offset
+
+    let currentIndex = 0;
+    let playing = false;
+
+    // 초기 세팅
+    videos.forEach((v,i)=>{
+      v.src = videoSrc[i];
+      v.loop = true;
+    });
+    audio.src = audioSrc[0];
+    slide(); 
+
+    function slide() {
+      // 중앙에 currentIndex 보여주기
+      const x = fullW * currentIndex + offset;
+      videoContainer.style.transform = `translateX(-${x}px)`;
+    }
+
+    function togglePlay() {
+      if (!playing) {
+        audio.play();
+        videos[currentIndex].play();
+        playBtn.textContent = '■';
+      } else {
+        audio.pause();
+        videos[currentIndex].pause();
+        playBtn.textContent = '▶︎';
+      }
+      playing = !playing;
+    }
+
+    audio.addEventListener('timeupdate', () => {
+      const pct = (audio.currentTime / 60) * 100;
+      progress.style.width = pct + '%';
+      const m = Math.floor(audio.currentTime / 60);
+      const s = String(Math.floor(audio.currentTime % 60)).padStart(2,'0');
+      timeDisplay.textContent = `${m}:${s} / 1:00`;
+    });
+
+    function next() {
+      changeIndex(1);
+    }
+    function prev() {
+      changeIndex(-1);
+    }
+    function changeIndex(delta) {
+      // 인덱스 무한 루프
+      currentIndex = (currentIndex + delta + videos.length) % videos.length;
+      // reset
+      videos.forEach(v=>{ v.pause(); v.currentTime=0; });
+      audio.pause(); audio.currentTime=0;
+      playing = false; playBtn.textContent='▶︎';
+      // 변경된 파일 로드
+      audio.src = audioSrc[currentIndex];
+      slide();
+    }
+  </script>
+
+</body>
+</html>
