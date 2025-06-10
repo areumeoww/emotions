@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>감정의 형태</title>
-  <!-- Noto Sans Medium 불러오기 -->
+  <!-- Noto Sans Medium -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@500&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -44,7 +44,6 @@
     }
     .nav a:hover::after { width:100%; }
 
-    /* 플레이어 */
     .player {
       position:relative;
       width:400px; height:400px;
@@ -79,8 +78,6 @@
       border-radius:50%; width:50px; height:50px;
       color:#fff; font-size:1.5rem; cursor:pointer;
       transition:background .3s, color .3s;
-      font-family: 'Noto Sans', sans-serif;
-      font-weight: 500;
     }
     .controls button:hover {
       background:#fff; color:#000;
@@ -100,8 +97,6 @@
     }
     .time-display {
       font-size:0.9rem; color:#fff;
-      font-family: 'Noto Sans', sans-serif;
-      font-weight: 500;
     }
 
     /* === 반응형 (iPhone14 Pro 기준) === */
@@ -115,19 +110,20 @@
       }
       .nav {
         right: 10px;
-        gap: 10px;
+        gap: 8px;
       }
+      /* 글씨 더 축소 */
       .nav a {
-        font-size: 0.9rem;
+        font-size: 0.75rem;
       }
 
       .player {
         width: 90vw;
-        height: 90vw; /* 1:1 비율 */
+        height: 90vw;
         margin-top: 40px;
       }
       .video-item {
-        width: calc(90vw - 40px); /* margin 20px 양쪽 제외 */
+        width: calc(90vw - 40px);
         margin: 0 10px;
       }
 
@@ -169,13 +165,13 @@
 
   <div class="player">
     <div class="video-container" id="videoContainer">
-      <div class="video-item"><video id="v0"></video></div>
-      <div class="video-item"><video id="v1"></video></div>
-      <div class="video-item"><video id="v2"></video></div>
-      <div class="video-item"><video id="v3"></video></div>
-      <div class="video-item"><video id="v4"></video></div>
-      <div class="video-item"><video id="v5"></video></div>
-      <div class="video-item"><video id="v6"></video></div>
+      <div class="video-item"><video id="v0" playsinline muted></video></div>
+      <div class="video-item"><video id="v1" playsinline muted></video></div>
+      <div class="video-item"><video id="v2" playsinline muted></video></div>
+      <div class="video-item"><video id="v3" playsinline muted></video></div>
+      <div class="video-item"><video id="v4" playsinline muted></video></div>
+      <div class="video-item"><video id="v5" playsinline muted></video></div>
+      <div class="video-item"><video id="v6" playsinline muted></video></div>
     </div>
   </div>
 
@@ -199,14 +195,8 @@
     const progress = document.getElementById('progress');
     const timeDisplay = document.getElementById('timeDisplay');
     const videos = [
-      document.getElementById('v0'),
-      document.getElementById('v1'),
-      document.getElementById('v2'),
-      document.getElementById('v3'),
-      document.getElementById('v4'),
-      document.getElementById('v5'),
-      document.getElementById('v6')
-    ];
+      ...Array(7).keys()
+    ].map(i => document.getElementById(`v${i}`));
 
     const videoSrc = [
       '01_render.mp4','02_render.mp4','03_render.mp4',
@@ -220,7 +210,6 @@
     const itemW = 400, margin = 20, fullW = itemW + margin*2, offset = margin;
     let currentIndex = 0, playing = false;
 
-    // 초기 로드
     videos.forEach((v,i)=>{ v.src = videoSrc[i]; v.loop = true; });
     audio.src = audioSrc[0];
     slide();
@@ -232,9 +221,13 @@
 
     function togglePlay() {
       if (!playing) {
-        audio.play(); videos[currentIndex].play(); playBtn.textContent='■';
+        audio.play();
+        videos[currentIndex].play();
+        playBtn.textContent = '■';
       } else {
-        audio.pause(); videos[currentIndex].pause(); playBtn.textContent='▶︎';
+        audio.pause();
+        videos[currentIndex].pause();
+        playBtn.textContent = '▶︎';
       }
       playing = !playing;
     }
@@ -251,8 +244,8 @@
     function prev() { changeIndex(-1); }
     function changeIndex(delta) {
       currentIndex = (currentIndex + delta + videos.length) % videos.length;
-      videos.forEach(v=>{ v.pause(); v.currentTime=0; });
-      audio.pause(); audio.currentTime=0; playing=false; playBtn.textContent='▶︎';
+      videos.forEach(v=>{ v.pause(); v.currentTime = 0; });
+      audio.pause(); audio.currentTime = 0; playing=false; playBtn.textContent='▶︎';
       audio.src = audioSrc[currentIndex];
       slide();
     }
