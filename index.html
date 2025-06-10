@@ -4,11 +4,14 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>감정의 형태</title>
+  <!-- Noto Sans Medium 불러오기 -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@500&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       background: #2e3138;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: 'Noto Sans', sans-serif;
+      font-weight: 500;
       color: #fff;
       display: flex;
       flex-direction: column;
@@ -22,11 +25,12 @@
       border-bottom-right-radius:20px;
       position:relative;
       display:flex; justify-content:center; align-items:center;
+      padding: 0 20px;
     }
     .logo img { height:60px; }
     .nav {
-      position:absolute; right:40px;
-      display:flex; gap:30px;
+      position:absolute; right:20px;
+      display:flex; gap:20px;
     }
     .nav a {
       color:#333; text-decoration:none;
@@ -40,7 +44,7 @@
     }
     .nav a:hover::after { width:100%; }
 
-    /* 플레이어: overflow visible */
+    /* 플레이어 */
     .player {
       position:relative;
       width:400px; height:400px;
@@ -75,6 +79,8 @@
       border-radius:50%; width:50px; height:50px;
       color:#fff; font-size:1.5rem; cursor:pointer;
       transition:background .3s, color .3s;
+      font-family: 'Noto Sans', sans-serif;
+      font-weight: 500;
     }
     .controls button:hover {
       background:#fff; color:#000;
@@ -94,6 +100,57 @@
     }
     .time-display {
       font-size:0.9rem; color:#fff;
+      font-family: 'Noto Sans', sans-serif;
+      font-weight: 500;
+    }
+
+    /* === 반응형 (iPhone14 Pro 기준) === */
+    @media (max-width: 430px) {
+      header {
+        height:60px;
+        padding: 0 10px;
+      }
+      .logo img {
+        height: 50px;
+      }
+      .nav {
+        right: 10px;
+        gap: 10px;
+      }
+      .nav a {
+        font-size: 0.9rem;
+      }
+
+      .player {
+        width: 90vw;
+        height: 90vw; /* 1:1 비율 */
+        margin-top: 40px;
+      }
+      .video-item {
+        width: calc(90vw - 40px); /* margin 20px 양쪽 제외 */
+        margin: 0 10px;
+      }
+
+      .controls {
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .controls button {
+        width: 40px; height: 40px;
+        font-size: 1.2rem;
+      }
+
+      .bar-container {
+        gap: 5px;
+        margin-top: 10px;
+      }
+      .bar {
+        width: 70vw;
+        height: 5px;
+      }
+      .time-display {
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
@@ -112,7 +169,6 @@
 
   <div class="player">
     <div class="video-container" id="videoContainer">
-      <!-- 7곡 분량 -->
       <div class="video-item"><video id="v0"></video></div>
       <div class="video-item"><video id="v1"></video></div>
       <div class="video-item"><video id="v2"></video></div>
@@ -152,83 +208,51 @@
       document.getElementById('v6')
     ];
 
-    // 실제 파일명 배열로 교체!
     const videoSrc = [
-      '01_render.mp4',
-      '02_render.mp4',
-      '03_render.mp4',
-      '04_render.mp4',
-      '05_render.mp4',
-      '06_render.mp4',
-      '07_render.mp4'
+      '01_render.mp4','02_render.mp4','03_render.mp4',
+      '04_render.mp4','05_render.mp4','06_render.mp4','07_render.mp4'
     ];
     const audioSrc = [
-      '01.mp3',
-      '02.mp3',
-      '03.mp3',
-      '04.mp3',
-      '05.mp3',
-      '06.mp3',
-      '07.mp3'
+      '01.mp3','02.mp3','03.mp3',
+      '04.mp3','05.mp3','06.mp3','07.mp3'
     ];
 
-    const itemW = 400;
-    const margin = 20;
-    const fullW = itemW + margin*2;
-    const offset = margin; // centering offset
+    const itemW = 400, margin = 20, fullW = itemW + margin*2, offset = margin;
+    let currentIndex = 0, playing = false;
 
-    let currentIndex = 0;
-    let playing = false;
-
-    // 초기 세팅
-    videos.forEach((v,i)=>{
-      v.src = videoSrc[i];
-      v.loop = true;
-    });
+    // 초기 로드
+    videos.forEach((v,i)=>{ v.src = videoSrc[i]; v.loop = true; });
     audio.src = audioSrc[0];
-    slide(); 
+    slide();
 
     function slide() {
-      // 중앙에 currentIndex 보여주기
       const x = fullW * currentIndex + offset;
       videoContainer.style.transform = `translateX(-${x}px)`;
     }
 
     function togglePlay() {
       if (!playing) {
-        audio.play();
-        videos[currentIndex].play();
-        playBtn.textContent = '■';
+        audio.play(); videos[currentIndex].play(); playBtn.textContent='■';
       } else {
-        audio.pause();
-        videos[currentIndex].pause();
-        playBtn.textContent = '▶︎';
+        audio.pause(); videos[currentIndex].pause(); playBtn.textContent='▶︎';
       }
       playing = !playing;
     }
 
     audio.addEventListener('timeupdate', () => {
-      const pct = (audio.currentTime / 60) * 100;
+      const pct = (audio.currentTime/60)*100;
       progress.style.width = pct + '%';
-      const m = Math.floor(audio.currentTime / 60);
-      const s = String(Math.floor(audio.currentTime % 60)).padStart(2,'0');
+      const m = Math.floor(audio.currentTime/60);
+      const s = String(Math.floor(audio.currentTime%60)).padStart(2,'0');
       timeDisplay.textContent = `${m}:${s} / 1:00`;
     });
 
-    function next() {
-      changeIndex(1);
-    }
-    function prev() {
-      changeIndex(-1);
-    }
+    function next() { changeIndex(1); }
+    function prev() { changeIndex(-1); }
     function changeIndex(delta) {
-      // 인덱스 무한 루프
       currentIndex = (currentIndex + delta + videos.length) % videos.length;
-      // reset
       videos.forEach(v=>{ v.pause(); v.currentTime=0; });
-      audio.pause(); audio.currentTime=0;
-      playing = false; playBtn.textContent='▶︎';
-      // 변경된 파일 로드
+      audio.pause(); audio.currentTime=0; playing=false; playBtn.textContent='▶︎';
       audio.src = audioSrc[currentIndex];
       slide();
     }
