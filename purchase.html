@@ -1,115 +1,319 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>감정의 형태 - Pre-listen</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>감정의 형태 - Purchase</title>
   <style>
-    @font-face { font-family: 'OngeulipBakDahyun'; src: url('assets/OngeulipBakDahyun-Regular.ttf') format('truetype'); }
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-    html, body { height:100%; overflow:hidden; }
-    body { display:flex; flex-direction:column; align-items:center; background:#505963; font-family:'OngeulipBakDahyun',sans-serif; color:#fff; }
-    a { text-decoration:none; color:inherit; }
-    header { height:50px; width:100%; background:#fff; display:flex; align-items:center; justify-content:space-between; padding:0 5%; flex-shrink:0; }
-    .header-logo img { max-height:30px; }
-    nav a { font-family:'OngeulipBakDahyun',sans-serif; font-size:0.8em; color:#505963; }
-    .slider { position:relative; width:50%; max-width:450px; aspect-ratio:1/1; overflow:hidden; border-radius:16px; margin-top:10px; }
-    .slides { display:flex; height:100%; transition:transform .5s ease; }
-    .slides img, .slides video { width:100%; height:100%; object-fit:cover; flex-shrink:0; }
-    .arrow { position:absolute; top:50%; transform:translateY(-50%); font-size:1.5em; color:rgba(255,255,255,0.8); cursor:pointer; }
-    .arrow.left { left:8px; } .arrow.right { right:8px; }
-    .info-bar { width:50%; max-width:450px; display:flex; justify-content:space-between; align-items:center; margin:8px auto 4px; }
-    .track-title { font-family:'Noto Sans',sans-serif; font-size:0.9em; }
-    .purchase-btn { font-family:'Noto Sans',sans-serif; font-size:0.85em; background:rgba(0,0,0,0.6); padding:6px 16px; border-radius:16px; }
-    .progress-container, .controls { width:50%; max-width:450px; display:flex; align-items:center; justify-content:center; margin:4px auto; }
-    .progress-container { justify-content:space-between; }
-    .time { width:30px; font-family:'OngeulipBakDahyun',sans-serif; font-size:0.8em; text-align:center; }
-    .bar { flex:1; height:5px; background:rgba(255,255,255,0.3); border-radius:2px; overflow:hidden; margin:0 6px; }
-    .bar .progress { width:0; height:100%; background:#fff; }
-    .controls button { background:none; border:none; color:#fff; font-size:1.2em; cursor:pointer; }
-    .purchase-modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:1000; }
-    .purchase-content { width:80%; max-width:900px; height:80%; background:#2e3138; display:flex; border-radius:12px; overflow:hidden; }
-    .purchase-left, .purchase-right { padding:20px; overflow:auto; }
-    .purchase-left { width:50%; position:relative; }
-    .purchase-left .slider { margin:0; width:100%; }
-    .purchase-right { width:50%; color:#fff; font-family:'OngeulipBakDahyun',sans-serif; }
-    .purchase-right h2 { font-family:'Noto Sans',sans-serif; font-size:1.4em; margin-bottom:12px; }
-    .purchase-right p { font-size:0.9em; line-height:1.4; margin-bottom:8px; }
-    .dots { display:flex; gap:6px; margin:12px 0; }
-    .dot { width:10px; height:10px; border:1px solid #fff; border-radius:50%; }
-    .dot.active { background:#fff; }
-    .close-btn { position:absolute; top:10px; right:10px; background:none; border:none; color:#fff; font-size:1.5em; cursor:pointer; }
-    @media (max-width:480px) { .purchase-content { flex-direction:column; height:auto; max-height:90%; } .purchase-left, .purchase-right { width:100%; } }
+    @font-face {
+      font-family: 'OngeulipBakDahyun';
+      src: url('assets/OngeulipBakDahyun-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #3d4249;
+      color: #eee;
+      font-family: 'Noto Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    a { color: inherit; text-decoration: none; }
+    header {
+      width: 100%;
+      height: 100px;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      font-family: 'OngeulipBakDahyun', sans-serif;
+    }
+    .header-logo { display: inline-block; }
+    .header-logo img { max-height: 60px; width: auto; }
+    nav { display: flex; gap: 16px; }
+    nav a { font-family: 'OngeulipBakDahyun', sans-serif; font-size: 1em; color: #505963; }
+    nav a.active { font-weight: bold; }
+
+    .main-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 80px;
+      margin: 0 auto;
+      padding: 80px 5%;
+      max-width: 1200px;
+      min-height: calc(100vh - 100px);
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .cover-container {
+      flex: 0 1 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .cover-img {
+      width: min(500px, 90vw);
+      height: min(500px, 90vw);
+      background: #111;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.17);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cover-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .arrow-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2.5em;
+      color: #cfd2d5;
+      background: none;
+      border: none;
+      cursor: pointer;
+      user-select: none;
+      z-index: 1;
+    }
+    .arrow-btn:hover {
+      color: #eee;
+    }
+    #prevBtn { left: -40px; }
+    #nextBtn { right: -40px; }
+    .dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 18px;
+      gap: 10px;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #bfc3c7;
+      opacity: 0.6;
+      transition: background 0.2s, opacity 0.2s;
+    }
+    .dot.active {
+      background: #eee;
+      opacity: 1;
+    }
+    .info-container {
+      flex: 0 1 min(460px, 90vw);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      font-family: 'Noto Sans', sans-serif;
+      text-align: right;
+      width: 100%;
+    }
+    .album-title {
+      font-size: 1.8em;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #eee;
+      text-align: right;
+      width: 100%;
+    }
+    .album-sub {
+      font-size: 1.1em;
+      color: #eee;
+      margin-bottom: 18px;
+      text-align: right;
+      width: 100%;
+    }
+    .album-desc {
+      font-size: 1em;
+      line-height: 1.3;
+      color: #eee;
+      margin-bottom: 32px;
+      white-space: pre-line;
+      text-align: right;
+      width: 100%;
+    }
+    .purchase-btn {
+      padding: 8px 20px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 20px;
+      font-size: 0.95em;
+      cursor pointer;
+      transition: background 0.2s;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      color: #eee;
+      border: none;
+    }
+    .purchase-btn:hover {
+      background: rgba(0,0,0,0.8);
+    }
+
+    /* purchase 페이드 아웃 오버레이 */
+    .purchase-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(80, 89, 99, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeOut 4s ease-out forwards;
+    }
+    .purchase-overlay span {
+  font-family: 'OngeulipBakDahyun', sans-serif;
+  font-size: 2.4em;
+  color: #eee;
+  margin-bottom: 20px;
+}
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      100% { opacity: 0; visibility: hidden; }
+    }
+
+    @media (max-width: 1000px) {
+      .main-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        padding: 60px 5%;
+      }
+      .cover-img {
+        width: min(320px, 90vw);
+        height: min(320px, 90vw);
+      }
+      #prevBtn { left: 0; }
+      #nextBtn { right: 0; }
+      .info-container {
+        align-items: flex-end;
+        text-align: right;
+      }
+      .album-title, .album-sub, .album-desc {
+        text-align: right;
+      }
+    }
+    @media (max-width: 600px) {
+      .main-container {
+        padding: 40px 5%;
+      }
+      nav {
+        right: 16px;
+        top: 32px;
+        gap: 12px;
+      }
+      header {
+        height: 80px;
+        padding: 0 3%;
+      }
+      .purchase-overlay span { font-size: 1.8em; }
+    }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="purchase-overlay">
+    <span>purchase</span>
+  </div>
   <header>
-    <div class="header-logo"><img src="assets/logo.png" alt="감정의 형태"></div>
-    <nav><a href="#prelisten">Pre-listen</a><a href="#preview">Preview</a><a href="purchase.html">Purchase</a></nav>
+    <a href="index.html" class="header-logo"><img src="assets/logo.png" alt="감정의 형태"></a>
+    <nav>
+      <a href="prelisten.html">Pre-listen</a>
+      <a href="purchase.html" class="active">Purchase</a>
+    </nav>
   </header>
-  <div class="slider" id="prelisten">
-    <div class="slides" id="slides">
-      <img src="assets/01_render.png" alt="Intro">
-      <video id="vid1" src="assets/02_render.mp4" poster="assets/02_render.png" playsinline muted loop></video>
-      <img src="assets/03_render.png" alt="Blue rain">
-      <img src="assets/04_render.png" alt="Glassy">
-      <img src="assets/05_render.png" alt="no1se garden">
-      <img src="assets/06_render.png" alt="존재상실">
-      <img src="assets/07_render.png" alt="Outro">
-    </div>
-    <button class="arrow left" onclick="prev()">&#10094;</button>
-    <button class="arrow right" onclick="next()">&#10095;</button>
-  </div>
-  <div class="info-bar">
-    <div class="track-title" id="trackTitle">Intro 감정의 형태</div>
-  </div>
-  <div class="progress-container">
-    <div class="time" id="currentTime">0:00</div>
-    <div class="bar"><div id="progress" class="progress"></div></div>
-    <div class="time" id="totalTime">0:00</div>
-  </div>
-  <div class="controls"><button onclick="togglePlay()" id="playBtn">▶︎</button></div>
-  <audio id="audio" src="assets/01.mp3" loop></audio>
-  <div id="previewPopup" class="popup"><div class="popup-content"><p>1분 미리듣기 중입니다.</p><button onclick="closePopup()">확인</button></div></div>
-
-  <!-- Purchase Modal -->
-  <div class="purchase-modal" id="purchaseModal">
-    <div class="purchase-content">
-      <div class="purchase-left">
-        <button class="close-btn" onclick="closePurchase()">×</button>
-        <div class="slider" id="prelisten2">
-          <div class="slides2" id="slides2">
-            <img src="assets/01_render.png">
-            <img src="assets/02_render.png">
-            <img src="assets/03_render.png">
-            <img src="assets/04_render.png">
-            <img src="assets/05_render.png">
-            <img src="assets/06_render.png">
-            <img src="assets/07_render.png">
-          </div>
-          <button class="arrow left" onclick="prev2()">&#10094;</button>
-          <button class="arrow right" onclick="next2()">&#10095;</button>
-        </div>
-        <div class="dots"><span class="dot"></span><span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+  <main class="main-container">
+    <div class="cover-container">
+      <button class="arrow-btn" id="prevBtn">&#60;</button>
+      <div class="cover-img">
+        <img id="coverImg" src="assets/001.png" alt="앨범 커버">
       </div>
-      <div class="purchase-right">
-        <small>areum</small>
-        <h2>The 1st mini Album<br>[감정의 형태]</h2>
-        <p>침대 위에 누워 잠에 들기 전<br>보이지 않았던 감정들이 하나의 형태를 갖추고 떠오른다.</p>
-        <p>나만 있는 시간 속에서 부유하듯 지나가는 감정의 조각들,<br>때론 집으로부터 떨리는 밤처럼 어지러운 정적처럼 마음이 복잡해진다.</p>
-        <p>스물 두 살 여름 안에 있는 나는 이러한 감정을 느꼈고,<br>그런 감정을 하나하나 방 안에 담아냈다.</p>
-        <p>앨범의 수록곡은 총 7곡으로 편안함, 불안함, 질투심, 기대감, 공허함을 주제로 한 곡들이 수록되어 있다.</p>
-        <p>하나의 방처럼 구성된 이 앨범은 그 안에 머무는 감정의 결을 음악과 시각적 오브제로 천천히 펼쳐낸다.</p>
-        <p>이는 나라는 사람 안에 남겨진 감정의 풍경들에 대한 기록이다.</p>
-        <button class="purchase-btn">&gt; 구매하기</button>
+      <button class="arrow-btn" id="nextBtn">&#62;</button>
+      <div class="dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
       </div>
     </div>
-  </div>
+    <div class="info-container">
+      <div class="album-title">The 1st mini Album<br>[감정의 형태]</div>
+      <div class="album-desc">
+        침대 위, 잠들기 전의 순간
+        보이지 않던 감정들이
+        조용히 형태를 갖추며 떠오른다.
 
+        나만 있는 시간 속에서
+        부유하듯 흘러가는 감정의 조각들,
+        깨질 듯 반짝이는 질투,
+        어지러운 정원 같은 기대와 혼란.
+
+        스물두 살, 여름의 한 가운데에서
+        나는 이 모든 감정을 느꼈고
+        그 조각들을 하나씩
+        작한 방 안에 담아두었다.
+
+        앨범은 총 7곡으로 구성되어 있으며,
+        편안함, 불안함, 질투심, 기대감, 공허함
+        서로 다른 온도의 감정들을 노래한다.
+
+        하나의 방처럼 구성된 이 앨범은
+        그 안에 머무는 감정의 결을
+        음악과 시각적 오브제로 천천히 펼쳐낸다.
+      </div>
+      <button class="purchase-btn" onclick="window.location.href='final.html'">&gt; 구매하기</button>
+    </div>
+  </main>
   <script>
-    // existing script...
-    function openPurchase() { document.getElementById('purchaseModal').style.display = 'flex'; }
-    function closePurchase() { document.getElementById('purchaseModal').style.display = 'none'; }
+    // 앨범 커버 슬라이드 (예시: 7장)
+    const coverImgs = [
+      'assets/001.png',
+      'assets/002.png',
+      'assets/003.png',
+      'assets/004.png',
+      'assets/005.png',
+      'assets/006.png',
+      'assets/007.png'
+    ];
+    const coverImg = document.getElementById('coverImg');
+    const dots = document.querySelectorAll('.dot');
+    let current = 0;
+
+    function updateCover() {
+      coverImg.src = coverImgs[current];
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === current);
+      });
+    }
+    document.getElementById('prevBtn').onclick = function() {
+      current = (current - 1 + coverImgs.length) % coverImgs.length;
+      updateCover();
+    };
+    document.getElementById('nextBtn').onclick = function() {
+      current = (current + 1) % coverImgs.length;
+      updateCover();
+    };
+    updateCover();
   </script>
 </body>
 </html>
